@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      localstack:
+        image: localstack/localstack:latest
+        ports:
+          - 4566:4566
+        env:
+          SERVICES: s3,dynamodb,iam,sqs,sns,sts,lambda,apigateway,logs,cloudwatch,events
+          AWS_DEFAULT_REGION: us-east-1
+        options: >-
+          --health-cmd "curl -s http://localhost:4566/_localstack/health | grep -q available"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 30
+
+    env:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform fmt/validate (backend disabled)
+        run: |
+          set -e
+          dirs="01-local-basics 02-language-basics 03-for-each-patterns 04-dynamic-patterns 05-backend-bootstrap 06-state-migration 07-modules"
+          for d in $dirs; do
+            echo "== $d =="
+            terraform -chdir=$d fmt -check
+            terraform -chdir=$d init -backend=false
+            terraform -chdir=$d validate
+          done
+
+          for env in dev stage prod; do
+            echo "== live/$env =="
+            terraform -chdir=live/$env fmt -check
+            terraform -chdir=live/$env init -backend=false
+            terraform -chdir=live/$env validate
+          done
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Terratest
+        run: |
+          cd 11-terratest/test
+          go mod tidy
+          go test -v -timeout 25m
