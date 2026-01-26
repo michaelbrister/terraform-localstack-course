@@ -29,70 +29,83 @@ jobs:
       AWS_DEFAULT_REGION: us-east-1
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
 
-      - name: Terraform fmt/validate (backend disabled)
+      # -------------------------
+      # Terraform fmt / validate
+      # -------------------------
+      - name: Terraform fmt & validate (backend disabled)
         run: |
           set -e
           dirs="01-local-basics 02-language-basics 03-for-each-patterns 04-dynamic-patterns 05-backend-bootstrap 06-state-migration 07-modules"
           for d in $dirs; do
             echo "== $d =="
             terraform -chdir=$d fmt -check
-            terraform -chdir=$d init -backend=false
+            terraform -chdir=$d init -backend=false -input=false
             terraform -chdir=$d validate
           done
 
           for env in dev stage prod; do
             echo "== live/$env =="
             terraform -chdir=live/$env fmt -check
-            terraform -chdir=live/$env init -backend=false
+            terraform -chdir=live/$env init -backend=false -input=false
             terraform -chdir=live/$env validate
           done
 
-      # -----------------------------
-      # Conftest (OPA) Policy Gating
-      # -----------------------------
-      - name: Install conftest
+      # -------------------------
+      # Conftest (policy as code)
+      # -------------------------
+      - name: Install Conftest
         run: |
-          set -e
-          curl -L -o conftest.tar.gz https://github.com/open-policy-agent/conftest/releases/download/v0.56.0/conftest_0.56.0_Linux_x86_64.tar.gz
-          tar -xzf conftest.tar.gz conftest
+          curl -L https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_$(uname -s)_$(uname -m).tar.gz \
+            | tar xz
           sudo mv conftest /usr/local/bin/conftest
           conftest --version
 
-      - name: Policy check (conftest on plan JSON)
+      - name: Terraform plan + Conftest
         run: |
           set -e
           mkdir -p conftest-plans
+
           dirs="03-for-each-patterns 04-dynamic-patterns 07-modules"
           for d in $dirs; do
-            echo "== conftest $d =="
-
-            # init without backend, generate a plan, convert to JSON
-            terraform -chdir=$d init -backend=false
-            terraform -chdir=$d plan -out=tfplan -lock=false
-            terraform -chdir=$d show -json tfplan > conftest-plans/${d//\//_}.tfplan.json
-
-            # policy evaluation
+            echo "== Policy check: $d =="
+            terraform -chdir=$d init -backend=false -input=false
+            terraform -chdir=$d plan -no-color -input=false -lock=false -out=tfplan
+            terraform -chdir=$d show -no-color -json tfplan > conftest-plans/${d//\//_}.tfplan.json
             conftest test conftest-plans/${d//\//_}.tfplan.json -p policy
           done
 
-      - name: Upload conftest plan JSON artifacts
-        if: always()
+      - name: Upload Conftest plan artifacts
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: conftest-plans
-          path: conftest-plans/*.tfplan.json
+          path: conftest-plans
 
+      # -------------------------
+      # Terratest
+      # -------------------------
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.22"
+
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
       - name: Terratest
         run: |
