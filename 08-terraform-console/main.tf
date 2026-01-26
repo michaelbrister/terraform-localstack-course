@@ -16,6 +16,6 @@ locals {
 
   rules = [
     { topic = "events", queue = "worker" },
-    { topic = "events", queue = "audit"  },
+    { topic = "events", queue = "audit" },
   ]
 }

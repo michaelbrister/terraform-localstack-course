@@ -18,8 +18,8 @@ variable "topics" {
 variable "buckets" {
   description = "S3 buckets with optional lifecycle rules"
   type = map(object({
-    versioning      = bool
-    force_destroy   = bool
+    versioning    = bool
+    force_destroy = bool
     lifecycle_rules = optional(list(object({
       id          = string
       enabled     = bool

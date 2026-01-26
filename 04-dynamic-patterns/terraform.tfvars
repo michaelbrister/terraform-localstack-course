@@ -6,7 +6,7 @@ buckets = {
     ]
   }
   assets = {
-    force_destroy = true
+    force_destroy   = true
     lifecycle_rules = []
   }
 }

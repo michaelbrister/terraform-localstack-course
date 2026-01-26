@@ -29,14 +29,14 @@ module "stack" {
     events = {
       tags = { Purpose = "events" }
       queues = [
-        { name = "worker", create_dlq = true,  max_receive_count = 3 },
-        { name = "audit",  create_dlq = false, max_receive_count = 0 },
+        { name = "worker", create_dlq = true, max_receive_count = 3 },
+        { name = "audit", create_dlq = false, max_receive_count = 0 },
       ]
     }
   }
 }
 
 output "buckets" { value = module.stack.bucket_names }
-output "tables"  { value = module.stack.table_names }
-output "topics"  { value = module.stack.topic_arns }
-output "queues"  { value = module.stack.queue_urls }
+output "tables" { value = module.stack.table_names }
+output "topics" { value = module.stack.topic_arns }
+output "queues" { value = module.stack.queue_urls }

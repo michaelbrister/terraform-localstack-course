@@ -13,10 +13,10 @@ module "stack" {
       tags = { Purpose = "logs" }
     }
     assets = {
-      versioning    = false
-      force_destroy = true
+      versioning      = false
+      force_destroy   = true
       lifecycle_rules = []
-      tags = { Purpose = "assets" }
+      tags            = { Purpose = "assets" }
     }
   }
 
@@ -34,8 +34,8 @@ module "stack" {
   topics = {
     events = {
       queues = [
-        { name = "worker", create_dlq = true,  max_receive_count = 3 },
-        { name = "audit",  create_dlq = false, max_receive_count = 0 },
+        { name = "worker", create_dlq = true, max_receive_count = 3 },
+        { name = "audit", create_dlq = false, max_receive_count = 0 },
       ]
     }
   }
