@@ -1,4 +1,7 @@
-variable "env" { type = string default = "dev" }
+variable "env" {
+  type    = string
+  default = "dev"
+}
 
 variable "buckets" {
   description = "Map of bucket configs"

@@ -17,7 +17,10 @@ resource "aws_s3_bucket" "b" {
 resource "aws_s3_bucket_versioning" "v" {
   for_each = { for k, v in var.buckets : k => v if v.versioning }
   bucket   = aws_s3_bucket.b[each.key].id
-  versioning_configuration { status = "Enabled" }
+
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 output "buckets" {
