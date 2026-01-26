@@ -1,11 +1,15 @@
 package terraform.course
 
-# Deny messages returned by conftest.
+# Rego v1-compatible policy for Conftest.
+# Guards:
+# - Require tags Env/Stack when tags exist
+# - S3 bucket names must start with tf-course-
+# - Disallow public S3 ACLs
+
 deny contains msg if {
   r := resources[_]
   is_aws_resource(r)
 
-  # Only enforce when tags exist on the resource.
   tags := object.get(r.values, "tags", null)
   tags != null
 
@@ -23,6 +27,7 @@ deny contains msg if {
 deny contains msg if {
   r := resources[_]
   r.type == "aws_s3_bucket"
+
   name := r.values.bucket
   not startswith(name, "tf-course-")
 
@@ -32,6 +37,7 @@ deny contains msg if {
 deny contains msg if {
   r := resources[_]
   r.type == "aws_s3_bucket_acl"
+
   acl := r.values.acl
   acl in {"public-read", "public-read-write"}
 
@@ -46,11 +52,17 @@ is_aws_resource(r) if {
   startswith(r.type, "aws_")
 }
 
-resources contains r if {
-  r := input.planned_values.root_module.resources[_]
+# Recursively walk all modules to find resources (handles nested child modules).
+modules contains m if {
+  m := input.planned_values.root_module
+}
+
+modules contains m if {
+  parent := modules[_]
+  m := parent.child_modules[_]
 }
 
 resources contains r if {
-  child := input.planned_values.root_module.child_modules[_]
-  r := child.resources[_]
+  m := modules[_]
+  r := m.resources[_]
 }

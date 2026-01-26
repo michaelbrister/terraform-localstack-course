@@ -1,6 +1,13 @@
-# 11 — Terratest
+# 11 — Terratest (Integration Tests)
 
-Terratest provides **integration tests** for this course using LocalStack.
+Terratest validates that your Terraform code works end-to-end against LocalStack.
+
+## What we test (high ROI)
+1) Outputs exist and have expected shape
+2) Resources exist in LocalStack (S3, SNS, SQS)
+3) Messaging fan-out behavior (SNS publish → SQS receive)
+4) No-replacement guard (plan after apply is clean)
+5) Parallel safety (tests run in isolated temp dirs)
 
 ## Prereqs
 - Go 1.22+
@@ -8,7 +15,7 @@ Terratest provides **integration tests** for this course using LocalStack.
   ```bash
   docker compose up -d
   ```
-- AWS CLI recommended (tests can optionally verify resources exist)
+- AWS CLI installed (tests call it)
 
 ## Run locally
 ```bash
@@ -17,13 +24,5 @@ go mod tidy
 go test -v -timeout 25m
 ```
 
-## How tests are structured
-- Each test:
-  1) `terraform init/apply`
-  2) asserts outputs (shape + non-empty)
-  3) optionally verifies existence via AWS CLI against LocalStack
-  4) always `terraform destroy` in a defer
-
 ## CI notes
-CI runs Terraform fmt/validate and Terratest on a service container LocalStack.
-Avoid tests that depend on shared remote state keys.
+CI should not depend on shared remote state keys. Tests copy Terraform dirs to temp locations for isolation.

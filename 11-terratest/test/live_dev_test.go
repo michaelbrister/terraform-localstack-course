@@ -2,23 +2,29 @@ package test
 
 import (
   "testing"
+
   "github.com/gruntwork-io/terratest/modules/terraform"
+  "github.com/stretchr/testify/require"
 )
 
-// Note: CI uses init -backend=false for validation. This test applies a lab that uses local backend.
 func TestForEachDynamicPatterns(t *testing.T) {
   t.Parallel()
 
-  opts := &terraform.Options{
-    TerraformDir: "../../03-for-each-patterns",
+  tfDir := copyToTemp(t, "03-for-each-patterns")
+
+  opts := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+    TerraformDir: tfDir,
     NoColor:      true,
     EnvVars: map[string]string{
       "AWS_ACCESS_KEY_ID":     "test",
       "AWS_SECRET_ACCESS_KEY": "test",
       "AWS_DEFAULT_REGION":    "us-east-1",
     },
-  }
+  })
 
   defer terraform.Destroy(t, opts)
   terraform.InitAndApply(t, opts)
+
+  exitCode := terraform.PlanExitCode(t, opts)
+  require.Equal(t, 0, exitCode, "expected clean plan after apply")
 }
