@@ -80,15 +80,20 @@ resource "aws_sns_topic" "topic" {
 
 # Flatten topic->queues list into a stable map key
 locals {
+  topic_queue_list = flatten([
+    for topic_name, cfg in var.topics : [
+      for q in cfg.queues : {
+        key   = "${topic_name}|${q.name}"
+        topic = topic_name
+        q     = q
+      }
+    ]
+  ])
+
   topic_queue_map = {
-    for topic_name, cfg in var.topics :
-    # produce k=>v for each queue
-    # key format: "<topic>|<queue>"
-    # stable addressing avoids index-based keys
-    for q in cfg.queues :
-    "${topic_name}|${q.name}" => {
-      topic = topic_name
-      q     = q
+    for x in local.topic_queue_list : x.key => {
+      topic = x.topic
+      q     = x.q
     }
   }
 }
