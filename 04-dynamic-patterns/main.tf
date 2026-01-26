@@ -4,6 +4,12 @@ resource "aws_s3_bucket" "b" {
   for_each      = var.buckets
   bucket        = "${local.prefix}-${each.key}-dyn"
   force_destroy = each.value.force_destroy
+
+  tags = {
+    Env   = var.env
+    Stack = "tf-course"
+    Name  = each.key
+  }
 }
 
 # Only create lifecycle config when rules exist
