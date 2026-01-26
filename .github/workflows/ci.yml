@@ -54,6 +54,41 @@ jobs:
             terraform -chdir=live/$env validate
           done
 
+      # -----------------------------
+      # Conftest (OPA) Policy Gating
+      # -----------------------------
+      - name: Install conftest
+        run: |
+          set -e
+          curl -L -o conftest.tar.gz https://github.com/open-policy-agent/conftest/releases/download/v0.56.0/conftest_0.56.0_Linux_x86_64.tar.gz
+          tar -xzf conftest.tar.gz conftest
+          sudo mv conftest /usr/local/bin/conftest
+          conftest --version
+
+      - name: Policy check (conftest on plan JSON)
+        run: |
+          set -e
+          mkdir -p conftest-plans
+          dirs="03-for-each-patterns 04-dynamic-patterns 07-modules"
+          for d in $dirs; do
+            echo "== conftest $d =="
+
+            # init without backend, generate a plan, convert to JSON
+            terraform -chdir=$d init -backend=false
+            terraform -chdir=$d plan -out=tfplan -lock=false
+            terraform -chdir=$d show -json tfplan > conftest-plans/${d//\//_}.tfplan.json
+
+            # policy evaluation
+            conftest test conftest-plans/${d//\//_}.tfplan.json -p policy
+          done
+
+      - name: Upload conftest plan JSON artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: conftest-plans
+          path: conftest-plans/*.tfplan.json
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
