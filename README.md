@@ -1,59 +1,105 @@
-# Certification Roadmap: Associate vs Professional
 
-This repo can take someone from **zero/limited Terraform** to **strong exam readiness**,
-but you still need **targeted exam practice** and a few extra topics that LocalStack
-doesn't naturally exercise (cloud-specific nuances).
+# Terraform Training Program — Zero → Associate → Professional (LocalStack + Terraform Cloud Concepts)
 
-## Terraform Associate (003) — What you must be able to do
-Core objectives:
-- Understand Terraform workflow: init/plan/apply/destroy
-- Read and write HCL: variables, locals, outputs, functions
-- Use collections: maps, lists, objects; for_each; dynamic; expressions
-- State: local vs remote; locking; state commands; import basics; drift
-- Modules: create, consume, version, pass inputs/outputs
-- Terraform Cloud basics (conceptual): workspaces, runs, state storage, VCS integration
-- CLI: fmt, validate, console, providers, state subcommands
+**Last updated:** 2026-01-29
 
-What this repo covers strongly:
-- HCL language + for_each/dynamic patterns
-- State progression and migration
-- Multi-env folder layout
-- Refactor/moved blocks and import drills
-- CI + testing mindset
+This repository is a **complete Terraform training program** designed to take a learner from **little/no Terraform experience**
+to a point where they can:
 
-What to add for full Associate coverage:
-1) **Terraform Cloud/Enterprise concepts** (no need to use it, but you must know terms):
-   - runs, workspaces, remote operations, VCS-driven workflows, variables, state storage
-2) **Provider & version constraints** in more depth:
-   - required_providers vs provider blocks, dependency lock file, upgrade strategy
-3) **Terraform console** drills:
-   - expression evaluation, jsonencode/decode, regex, for expressions
-4) **Provisioners & null_resource** (mostly "know why not", but exam asks)
-5) **Sensitive values** and state implications
+- Pass the **Terraform Associate (003)** exam (with additional practice)
+- Contribute safely to real Terraform repos
+- Understand team workflows, governance, and Terraform Cloud concepts
+- Handle professional scenarios: refactors, imports, drift, incident recovery, CI gating, policy-as-code
 
-Recommendation:
-- Add a short `labs/terraform-console/` with 20 prompts + expected outputs.
-- Add a `terraform-cloud-concepts.md` cheat sheet and flashcards.
+The program uses **LocalStack** for hands-on AWS-like labs (safe, local, reproducible).
+Terraform Cloud content is taught **conceptually and procedurally** with optional “hands-on in TFC” tracks if your org has access.
 
-## Terraform Professional (Terraform Ops/Authoring Professional style)
-Professional-level expectations go beyond the Associate exam.
-You need to demonstrate:
-- Designing robust module interfaces (validation, defaults, backwards compatibility)
-- Refactoring large states safely (moved blocks, import at scale)
-- Multi-env release strategies and promotion
-- Policy as code (Sentinel/OPA) and guardrails
-- Testing modules (unit-ish) + integration tests (Terratest)
-- Drift detection and incident response playbooks
-- Secrets handling patterns
+---
 
-What to add for professional readiness:
-1) A full **capstone** with:
-   - app_stack module versioning
-   - separate `live/` envs consuming a pinned module version
-   - change promotion with changelog
-2) **Policy checks**:
-   - Example Sentinel policies or OPA conftest checks (even if run locally)
-3) **Documentation discipline**:
-   - module READMEs, examples, input/output tables
-4) **Operational runbooks**:
-   - handling partial applies, stale locks, state recovery procedures
+## Who this is for
+
+- New Terraform users (even without programming background)
+- DevOps / Cloud engineers onboarding to Terraform
+- Teams standardizing IaC workflows
+- Engineers moving from “Terraform user” → “Terraform operator”
+
+---
+
+## How the program is structured
+
+### Track A — Foundations (Associate-ready)
+Labs 01–13 + docs + timed drills.
+
+### Track B — Terraform Cloud / Team & Governance
+Labs 14–16 + governance docs + CI patterns + “approval gates”
+
+### Track C — Professional scenario labs
+Labs 17–22 + capstone + instructor-led incident drills
+
+---
+
+## Fast start
+
+1) Start LocalStack:
+```bash
+docker compose up -d
+curl -s http://localhost:4566/_localstack/health | jq
+```
+
+2) Run Labs in order (recommended):
+- `01-local-basics`
+- `02-language-basics`
+- `03-for-each-patterns`
+- `04-dynamic-patterns`
+- `05-backend-bootstrap`
+- `06-state-migration`
+- `07-modules`
+- `08-terraform-console`
+- `09-refactor-state`
+- `10-breakfix`
+- `11-terratest`
+- `12-exam-drills`
+- `13-state-subcommands`
+
+3) Then do Team & Governance + Professional labs:
+- `14-tfc-workspaces-and-runs`
+- `15-team-rbac-and-variables`
+- `16-governance-sentinel-opa-and-approvals`
+- `17-import-and-adopt`
+- `18-module-versioning-and-promotion`
+- `19-multi-team-boundaries`
+- `20-policy-hardening`
+- `21-incident-recovery`
+- `22-capstone`
+
+---
+
+## Instructor-led vs self-paced
+
+- **Self-paced:** Use `docs/syllabus-self-paced.md`.
+- **Instructor-led:** Use `docs/syllabus-instructor-led.md` + `docs/instructor-notes.md`.
+
+---
+
+## What “proficient” means here
+
+A proficient learner can:
+- Predict plans (adds/changes/destroys) before running them
+- Use `for_each` and stable keys correctly
+- Migrate and manage state safely (remote backends + locks)
+- Refactor without replacing resources (moved blocks, state mv)
+- Import existing infra and converge without downtime
+- Use CI gates (fmt/validate/tflint/trivy, policy checks)
+- Explain Terraform Cloud concepts: workspaces, runs, approvals, policies, RBAC
+- Handle drift and incident recovery calmly
+
+---
+
+## Reference documents
+
+- `docs/glossary.md`
+- `docs/00-how-to-think-in-terraform.md`
+- `docs/associate-objective-mapping.md`
+- `docs/terraform-cloud-team-governance-guide.md`
+- `docs/instructor-notes.md`
+- `docs/rubrics-and-evaluation.md`
