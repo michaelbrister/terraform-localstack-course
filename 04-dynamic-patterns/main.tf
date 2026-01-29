@@ -35,7 +35,3 @@ resource "aws_s3_bucket_lifecycle_configuration" "lc" {
     }
   }
 }
-
-output "bucket_names" {
-  value = { for k, b in aws_s3_bucket.b : k => b.bucket }
-}

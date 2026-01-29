@@ -1,19 +1,16 @@
-# Lab 09 — Refactor without replacement (moved blocks, state mv, import)
 
-This lab is three parts:
-1) Rename a resource and prevent replacement using a `moved` block
-2) Move a resource between modules using `moved` block or `terraform state mv`
-3) Import a resource created out-of-band
+# Lab 09 — Refactoring Without Destruction
 
-Part 1: Create initial resource
-- Apply `step1/`
-- Then rename resource in `step2/` and use `moved` to avoid replace
+## What this lab teaches you
+This lab demonstrates how to **change code without changing infrastructure**.
 
-Part 2: Module move
-- Apply `step3/` (resource in root)
-- Move into `modules/s3_bucket` and apply `step4/` with `moved`
+Concepts covered:
+- `moved` blocks
+- `terraform state mv`
+- Safe refactors
 
-Part 3: Import
-- Create a bucket using AWS CLI and import it into `step5/`
+## Key takeaway
+Resource addresses define identity, not resource names.
 
-Each step folder has commands and expected outputs.
+## Exam notes
+Refactor/state questions separate beginners from experienced users.

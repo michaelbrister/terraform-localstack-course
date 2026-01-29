@@ -1,25 +1,33 @@
-# Lab 02 — Variables, locals, outputs, validation
 
-Commands:
-```bash
-terraform fmt
-terraform init
-terraform validate
-terraform plan
-terraform apply -auto-approve
-terraform output
-```
+# Lab 02 — Terraform Language Basics (Variables, Locals, Outputs)
 
-Expected:
-- output includes `tf-course-dev-app`
+## What this lab teaches you
+This lab focuses on the **Terraform language itself**, independent of any cloud provider.
+You will learn how Terraform evaluates expressions and passes data through a configuration.
 
-Try validation failure:
-```bash
-terraform apply -auto-approve -var env=qa
-```
-Expected: error `env must be dev, stage, or prod`
+Concepts covered:
+- Input variables and defaults
+- Type constraints
+- Locals for reuse and clarity
+- Outputs as public interfaces
 
-Cleanup:
-```bash
-terraform destroy -auto-approve
-```
+## Key ideas
+- Variables are inputs to a configuration
+- Locals are computed values used internally
+- Outputs expose selected values after apply
+
+## What to pay attention to
+- How changing a variable affects the plan
+- How locals reduce duplication
+- How outputs act like return values
+
+## Exercises
+1. Override a variable using `-var`
+2. Override using a `.tfvars` file
+3. Change a local and observe the plan
+
+## Exam notes
+Expect questions about:
+- variable precedence
+- when to use locals vs variables
+- how outputs are consumed

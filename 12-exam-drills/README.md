@@ -1,12 +1,17 @@
-# Exam Drills (Timed)
 
-Unzip at repo root to create `12-exam-drills/`.
+# Lab 12 — Timed Exam Drills
 
-Rules:
-- Run with a timer. Diagnose, fix, verify.
-- Prefer fixes that avoid replacement.
-- End-state: `terraform plan` is clean OR shows only intended change.
-- When you use `force-unlock`, be sure the lock is truly stale.
+## What this lab teaches you
+These drills simulate **exam pressure and ambiguity**.
 
-Prereq:
-- LocalStack running: `docker compose up -d`
+Concepts covered:
+- Fast diagnosis
+- Reading Terraform plans
+- Fixing broken configs
+
+## How to use
+- Time yourself
+- Do not look up answers initially
+
+## Exam notes
+Speed + confidence matter.

@@ -35,8 +35,3 @@ module "stack" {
     }
   }
 }
-
-output "buckets" { value = module.stack.bucket_names }
-output "tables" { value = module.stack.table_names }
-output "topics" { value = module.stack.topic_arns }
-output "queues" { value = module.stack.queue_urls }

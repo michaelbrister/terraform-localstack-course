@@ -1,23 +1,16 @@
-# Lab 10 — Break/Fix Drills (Certification-grade)
 
-These are intentional failure modes you must learn to diagnose quickly.
+# Lab 10 — Break/Fix Terraform Scenarios
 
-## Drill A — Bad bucket name (invalid chars)
-Folder: `drill-a-bad-name`
-- Fix invalid bucket name characters, re-run plan/apply.
+## What this lab teaches you
+This lab intentionally introduces **common Terraform mistakes**.
 
-## Drill B — for_each key instability (index-based keys)
-Folder: `drill-b-key-instability`
-- You will see replacements when order changes.
-- Fix by switching to stable keys.
+Concepts covered:
+- Drift
+- Address instability
+- Backend misconfiguration
 
-## Drill C — State lock contention
-Folder: `drill-c-lock`
-- Two terminals contending on lock table.
-- Identify and resolve safe unlock procedure.
+## Goal
+Learn how to diagnose failures by reading plans and errors.
 
-## Drill D — Drift detection
-Folder: `drill-d-drift`
-- Modify tags out-of-band and reconcile.
-
-Each drill has expected error messages and remediation steps.
+## Exam notes
+Many exam questions are disguised troubleshooting scenarios.

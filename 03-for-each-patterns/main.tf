@@ -8,7 +8,11 @@ resource "aws_s3_bucket" "b" {
   bucket   = "${local.prefix}-${each.key}"
 
   tags = merge(
-    { Env = var.env, Stack = local.stack, Name = each.key },
+    {
+      Environment = var.env,
+      Stack       = local.stack,
+      Name        = each.key
+    },
     each.value.tags
   )
 }
@@ -21,8 +25,4 @@ resource "aws_s3_bucket_versioning" "v" {
   versioning_configuration {
     status = "Enabled"
   }
-}
-
-output "buckets" {
-  value = { for k, r in aws_s3_bucket.b : k => r.bucket }
 }

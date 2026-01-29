@@ -1,21 +1,22 @@
-# Lab 05 — Create dev/stage/prod backends with local state
 
-This lab is intentionally **local state**. Do not configure a backend here.
+# Lab 05 — Bootstrapping Remote State Infrastructure
 
-Run:
-```bash
-terraform fmt
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
+## What this lab teaches you
+This lab shows how to use Terraform to **create its own backend infrastructure**.
 
-Expected:
-- `Plan: 6 to add, 0 to change, 0 to destroy.`
-- Outputs include backend buckets and lock tables for dev/stage/prod.
+Concepts covered:
+- S3 buckets for remote state
+- DynamoDB for state locking
+- Multi-environment backend patterns
 
-Verify:
-```bash
-aws --endpoint-url=http://localhost:4566 s3 ls | grep tf-course-backend
-aws --endpoint-url=http://localhost:4566 dynamodb list-tables | jq '.TableNames'
-```
+## Why this matters
+Terraform cannot manage remote state until the backend exists.
+This lab teaches the safe bootstrapping pattern.
+
+## Key warning
+Backend infrastructure should be created once and rarely changed.
+
+## Exam notes
+Expect questions about:
+- why remote state is important
+- why locking matters

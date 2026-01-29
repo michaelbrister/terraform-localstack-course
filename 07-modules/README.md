@@ -1,26 +1,23 @@
-# Lab 07 — Module composition (S3 + DynamoDB + SNS/SQS fanout)
 
-Run:
-```bash
-terraform fmt
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
+# Lab 07 — Terraform Modules and Reuse
 
-Expected:
-- resources created across services (S3 bucket+versioning+lifecycle, DynamoDB table+ttl, SNS topic, SQS queues + DLQ, subscriptions)
-- outputs are maps
+## What this lab teaches you
+This lab introduces **modules** as the core unit of reuse in Terraform.
 
-Verify (optional):
-```bash
-aws --endpoint-url=http://localhost:4566 s3 ls | grep tf-course-dev-logs
-aws --endpoint-url=http://localhost:4566 dynamodb list-tables | jq '.TableNames[]' | grep tf-course-dev-sessions
-aws --endpoint-url=http://localhost:4566 sns list-topics | jq
-aws --endpoint-url=http://localhost:4566 sqs list-queues | jq
-```
+Concepts covered:
+- Module inputs and outputs
+- Composition of infrastructure
+- Clear interfaces
 
-Cleanup:
-```bash
-terraform destroy -auto-approve
-```
+## Why modules matter
+Modules:
+- enforce consistency
+- reduce duplication
+- enable team collaboration
+
+## Exercises
+1. Add a new input to the module
+2. Observe how it affects consumers
+
+## Exam notes
+Understand module source, inputs, outputs, and versioning.
