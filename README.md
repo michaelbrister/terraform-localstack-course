@@ -1,18 +1,25 @@
+# Terraform Fundamentals → Production (with LocalStack)
 
-# Terraform Training Program — Zero → Associate → Professional (LocalStack + Terraform Cloud Concepts)
+> A hands-on Terraform training program: Zero → Associate → Professional.
 
 **Last updated:** 2026-01-29
 
-This repository is a **complete Terraform training program** designed to take a learner from **little/no Terraform experience**
-to a point where they can:
+This repository is a **complete, hands-on Terraform training program** designed to take learners from
+**little/no Terraform experience** to **production-grade Terraform proficiency**.
+
+By the end of the program, learners can:
 
 - Pass the **Terraform Associate (003)** exam (with additional practice)
-- Contribute safely to real Terraform repos
+- Contribute safely to real Terraform codebases
 - Understand team workflows, governance, and Terraform Cloud concepts
 - Handle professional scenarios: refactors, imports, drift, incident recovery, CI gating, policy-as-code
 
-The program uses **LocalStack** for hands-on AWS-like labs (safe, local, reproducible).
-Terraform Cloud content is taught **conceptually and procedurally** with optional “hands-on in TFC” tracks if your org has access.
+The program emphasizes:
+
+- reproducible labs
+- safe failure and recovery
+- opinionated best practices
+- validation-first, CI-friendly workflows
 
 ---
 
@@ -28,25 +35,30 @@ Terraform Cloud content is taught **conceptually and procedurally** with optiona
 ## How the program is structured
 
 ### Track A — Foundations (Associate-ready)
+
 Labs 01–13 + docs + timed drills.
 
 ### Track B — Terraform Cloud / Team & Governance
+
 Labs 14–16 + governance docs + CI patterns + “approval gates”
 
 ### Track C — Professional scenario labs
+
 Labs 17–22 + capstone + instructor-led incident drills
 
 ---
 
 ## Fast start
 
-1) Start LocalStack:
+1. Start LocalStack:
+
 ```bash
 docker compose up -d
 curl -s http://localhost:4566/_localstack/health | jq
 ```
 
-2) Run Labs in order (recommended):
+2. Run Labs in order (recommended):
+
 - `01-local-basics`
 - `02-language-basics`
 - `03-for-each-patterns`
@@ -61,7 +73,8 @@ curl -s http://localhost:4566/_localstack/health | jq
 - `12-exam-drills`
 - `13-state-subcommands`
 
-3) Then do Team & Governance + Professional labs:
+3. Then do Team & Governance + Professional labs:
+
 - `14-tfc-workspaces-and-runs`
 - `15-team-rbac-and-variables`
 - `16-governance-sentinel-opa-and-approvals`
@@ -84,6 +97,7 @@ curl -s http://localhost:4566/_localstack/health | jq
 ## What “proficient” means here
 
 A proficient learner can:
+
 - Predict plans (adds/changes/destroys) before running them
 - Use `for_each` and stable keys correctly
 - Migrate and manage state safely (remote backends + locks)
